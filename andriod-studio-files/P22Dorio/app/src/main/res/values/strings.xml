@@ -6,4 +6,5 @@
     <string name="button_2">Botón 2</string>
     <string name="button_3">Botón 3</string>
     <string name="empty_text">No dejes el texto en blanco.</string>
+    <string name="void_text"> </string>
 </resources>

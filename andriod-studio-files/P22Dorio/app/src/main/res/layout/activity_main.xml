@@ -7,6 +7,11 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/main_text_view" />
+
     <EditText
         android:id="@+id/edit_text"
         android:layout_width="match_parent"
