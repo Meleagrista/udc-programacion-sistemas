@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">P24Dorio</string>
+    <string name="add_button">Add</string>
+    <string name="delete_button">Delete</string>
+    <string name="edit_button">Edit</string>
+    <string name="save_button">Ok</string>
+    <string name="accept">Aceptar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="invalid">Input is not a valid number</string>
+    <string name="input">Ingrese el número de nuevos elementos</string>
+    <string name="empty_text">No dejes el texto en blanco.</string>
+    <string name="title">Titulo</string>
+    <string name="subtitle">Subtítulo del artículo</string>
+    <string name="content">Tremendo artículo este: tiene varias lineas y todo.\nEs increible.</string>
+</resources>
