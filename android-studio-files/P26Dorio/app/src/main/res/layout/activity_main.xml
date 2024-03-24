@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:orientation="vertical">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/broadcastButton"
+        android:text="@string/br"
+        />
+
+    <!-- EditText -->
+    <EditText
+        android:id="@+id/countingEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/hint"
+        android:importantForAutofill="no"
+        android:inputType="number"
+        android:minHeight="48dp"
+        android:textColorHint="#546E7A" />
+
+    <!-- Switch -->
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/firstSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checked="false"
+        android:minHeight="48dp"
+        android:text="@string/ser_sw" />
+
+    <TextView
+        android:id="@+id/getText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:textSize="20sp"
+        />
+
+    <!-- Switch -->
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/secondSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checked="false"
+        android:minHeight="48dp"
+        android:text="@string/ser_sw_bind" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/setBut"
+        android:text="@string/set" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/getBut"
+        android:text="@string/get" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:visibility="visible"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:progress="0" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/thirdSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checked="false"
+        android:minHeight="48dp"
+        android:text="@string/ser_sw_back" />
+
+</LinearLayout>
