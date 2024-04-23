@@ -60,10 +60,10 @@ public class MyBoundCountingService extends Service {
         }
     }
 
-    public void setCount(int countLimit) {
+    public void setCount(int newCount) {
         synchronized (lock) {
             Log.d("_TAG", "Modifying the counter...");
-            limit = countLimit;
+            counter = newCount;
         }
     }
 
