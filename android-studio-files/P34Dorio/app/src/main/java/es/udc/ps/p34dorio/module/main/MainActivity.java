@@ -1,10 +1,13 @@
 package es.udc.ps.p34dorio.module.main;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -36,8 +39,17 @@ public class MainActivity extends BaseActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.main_list)
     RecyclerView mRecycler;
+
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.search_bar)
+    EditText mSearchBar;
+
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.search_button)
+    Button mSearchButton;
 
     private ArtistAdapter mAdapter;
 
@@ -60,7 +72,16 @@ public class MainActivity extends BaseActivity {
         mAdapter = new ArtistAdapter();
         mRecycler.setAdapter(mAdapter);
 
-        getArtists();
+        mSearchButton.setOnClickListener(v -> {
+            String query = mSearchBar.getText().toString().trim();
+            if (!query.isEmpty()) {
+                searchArtists(query);
+            } else {
+                Toast.makeText(MainActivity.this, "Please enter a search query", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        //getArtists();
     }
 
     public boolean isInternetAvailable() {
@@ -73,14 +94,14 @@ public class MainActivity extends BaseActivity {
         return capabilities != null && (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR));
     }
 
-    private void getArtists() {
+    /*private void getArtists() {
+        String query = "artist:rancid";
         if (isInternetAvailable()) {
             Retrofit retrofit = new Retrofit.Builder().baseUrl("https://musicbrainz.org/ws/2/")
                     .addConverterFactory(GsonConverterFactory.create()).build();
 
             MusicBrainzAPI api = retrofit.create(MusicBrainzAPI.class);
 
-            String query = "artist:rancid";
             String format = "json";
             Call<SearchArtists> call = api.searchArtistByName(query, format);
 
@@ -106,30 +127,81 @@ public class MainActivity extends BaseActivity {
             });
         } else {
             // Si no hay conexión a internet, recuperar datos de la base de datos local
-            loadArtistsFromDatabase();
+            loadArtistsFromDatabase(query);
+        }
+    }*/
+
+    private void searchArtists(String query) {
+        if (isInternetAvailable()) {
+            Retrofit retrofit = new Retrofit.Builder().baseUrl("https://musicbrainz.org/ws/2/")
+                    .addConverterFactory(GsonConverterFactory.create()).build();
+
+            MusicBrainzAPI api = retrofit.create(MusicBrainzAPI.class);
+
+            String format = "json";
+            Call<SearchArtists> call = api.searchArtistByName("artist:" + query, format);
+
+            call.enqueue(new Callback<SearchArtists>() {
+                @Override
+                public void onResponse(@NonNull Call<SearchArtists> call, @NonNull Response<SearchArtists> response) {
+                    if (response.isSuccessful()) {
+                        assert response.body() != null;
+                        List<Artist> artists = response.body().getArtists();
+                        Log.i(TAG, "Response OK: " + response.code());
+                        if (artists != null && !artists.isEmpty()) {
+                            mAdapter.setItems(artists);
+                            // Save artists to the local database
+                            saveArtistsToDatabase(artists);
+                        } else {
+                            Toast.makeText(MainActivity.this, "No artists found", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Log.e(TAG, "Response fails: " + response.code());
+                        Toast.makeText(MainActivity.this, "Failed to search artists", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<SearchArtists> call, @NonNull Throwable t) {
+                    Log.e(TAG, "Response fails: " + t.getMessage());
+                    Toast.makeText(MainActivity.this, "Failed to search artists", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            // If no internet, load artists from local database
+            loadArtistsFromDatabase(query);
         }
     }
 
     private void saveArtistsToDatabase(List<Artist> artists) {
         new Thread(() -> {
-            List<ArtistEntity> artistEntities = new ArrayList<>();
             for (Artist artist : artists) {
-                ArtistEntity entity = new ArtistEntity(artist.getId(), artist.getName());
-                artistEntities.add(entity);
+                // Check if the artist with the same ID already exists in the database
+                ArtistEntity existingArtist = artistDatabase.artistDao().getArtistById(artist.getId());
+                if (existingArtist == null) {
+                    // If the artist doesn't exist, insert it into the database
+                    ArtistEntity entity = new ArtistEntity(artist.getId(), artist.getName());
+                    artistDatabase.artistDao().insert(entity);
+                }
             }
-            artistDatabase.artistDao().insertAll(artistEntities);
         }).start();
     }
 
-    private void loadArtistsFromDatabase() {
+    private void loadArtistsFromDatabase(String query) {
         new Thread(() -> {
-            List<ArtistEntity> artistEntities = artistDatabase.artistDao().getAll();
+            List<ArtistEntity> artistEntities = artistDatabase.artistDao().searchArtistsByName("%" + query + "%");
             List<Artist> artists = new ArrayList<>();
             for (ArtistEntity entity : artistEntities) {
                 Artist artist = new Artist(entity.getId(), entity.getName());
                 artists.add(artist);
             }
-            runOnUiThread(() -> mAdapter.setItems(artists));
+            runOnUiThread(() -> {
+                if (artists.isEmpty()) {
+                    Toast.makeText(MainActivity.this, "No matching artists found in the database", Toast.LENGTH_SHORT).show();
+                } else {
+                    mAdapter.setItems(artists);
+                }
+            });
         }).start();
     }
 }
