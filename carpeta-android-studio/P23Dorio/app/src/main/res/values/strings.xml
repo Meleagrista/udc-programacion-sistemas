@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">P23Dorio</string>
+
+    <string name="default_url">https://fic.udc.es</string>
+    <string name="but_A">Botón A</string>
+    <string name="but_B">Botón B</string>
+    <string name="but_C">Botón C</string>
+    <string name="but_D">Botón D</string>
+    <string name="empty_text">No dejes el texto en blanco.</string>
+</resources>
