@@ -116,8 +116,8 @@ git push origin feature/<nueva caracteristica>
 
 ## Contribuyentes Destacados  
 
-<a href="https://github.com/Meleagrista/udc-computacion-grafica/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=Meleagrista/udc-computacion-grafica" />
+<a href="https://github.com/Meleagrista/udc-programacion-sistemas/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=Meleagrista/udc-programacion-sistemas" />
 </a>
 
 </br>
